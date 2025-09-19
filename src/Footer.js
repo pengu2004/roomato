@@ -16,17 +16,16 @@ export default function Footer() {
       alignItems: 'center',
       gap: 12,
     }}>
-      <div style={{ display: 'flex', gap: 18, justifyContent: 'center', marginBottom: 6 }}>
-        <a href="#" style={iconStyle} aria-label="Facebook">🌐</a>
-        <a href="#" style={iconStyle} aria-label="Twitter">🐦</a>
-        <a href="#" style={iconStyle} aria-label="Instagram">📸</a>
-      </div>
+      
       <div style={{ display: 'flex', gap: 18, justifyContent: 'center', marginBottom: 6 }}>
         <a href="#" style={linkStyle}>Privacy Policy</a>
         <a href="#" style={linkStyle}>Terms of Service</a>
       </div>
       <div style={{ fontSize: 13, color: '#bbb' }}>
         &copy; {new Date().getFullYear()} Roomato
+      </div>
+      <div style={{ fontSize: 13, color: '#bbb' }}>
+        Made with <span style={{ color: 'red' }}>♥</span> by Tejus and David
       </div>
     </footer>
   );
