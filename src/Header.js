@@ -2,10 +2,11 @@ import React from "react";
 import AppBar from '@mui/material/AppBar';
 import App from "./App";
 import { Typography } from "@mui/material";
-import {Avatar,Box,Button} from "@mui/material";
+import {Avatar,Box,Button,Toolbar} from "@mui/material";
 
 export default function Header({ onSignIn }) {
   return (
+    <>
     <AppBar position="fixed" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',
       backgroundColor: '#ffffffff',
     }}>
@@ -37,6 +38,9 @@ export default function Header({ onSignIn }) {
       <Button variant="contained" color="primary"  sx={{ backgroundColor: "#1abc96ff", ml: "auto", mr: "1rem" }} onClick={onSignIn}>Sign in</Button>
 
     </AppBar>
+          <Toolbar sx={{ height: '100px' }} />
+    
+</>
 
 
   );
