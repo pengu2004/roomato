@@ -1,8 +1,5 @@
 import React from "react";
 import {Box,Typography,TextField} from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-
 
 
 export default function HeroSection() {
