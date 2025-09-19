@@ -7,17 +7,13 @@ import {Avatar,Box,Button,Toolbar} from "@mui/material";
 export default function Header({ onSignIn }) {
   return (
     <>
-    <AppBar position="fixed" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',
-      backgroundColor: '#ffffffff',
+    <AppBar position="fixed" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',backgroundColor: '#ffffffff',
     }}>
       <Avatar
         src="/roomato-logo.png"
         alt="Roomato Logo"
         sx={{ width: 90, height: 90, padding: 0 }}
-        
-        
-      
-      />
+        />
       <Box sx={{position:'flex',flexDirection:'column',alignItems:'center',gap:1,}}>
       <Typography
         variant="h4"
