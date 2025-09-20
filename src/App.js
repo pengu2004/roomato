@@ -76,7 +76,7 @@ const modalOverlayStyle = {
 };
 
 const modalContainerStyle = {
-  background: '#fff',
+  background: '#000000ff',
   borderRadius: 20,
   boxShadow: '0 4px 32px rgba(0,0,0,0.18)',
   padding: 32,
