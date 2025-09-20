@@ -27,8 +27,10 @@ function App() {
 function AppRoutes() {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
-
-    const { signedIn, signOut } = useAuth(() => setShowLogin(false));
+  const handleAuthSuccess = () => {
+    setShowLogin(false);
+  };
+  const { signedIn, signOut } = useAuth(handleAuthSuccess);
 
 
 
