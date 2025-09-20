@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Header from "./Header";
 import HeroSection from "./HeroSection";
@@ -5,27 +6,59 @@ import FeaturesSection from "./FeaturesSection";
 import TestimonialSection from "./TestimonialSection";
 import Footer from "./Footer";
 import Login from "./Login";
+import Onboarding from "./Onboarding";
+import useAuth from "./useAuth";
+
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+
+
 
 function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}
+
+function AppRoutes() {
   const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
+
+    const { signedIn, signOut } = useAuth();
+
+
+  function handleAuthSuccess() {
+    setShowLogin(false);
+    navigate("/onboarding");
+  }
+
 
   return (
-    <div style={{ background: '#f6f8fa', minHeight: '100vh' }}>
-      <Header onSignIn={() => setShowLogin(true)} />
-      <HeroSection onGetStarted={() => setShowLogin(true)} />
-      <FeaturesSection />
-      <TestimonialSection />
-      <Footer />
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <div style={{ background: '#f6f8fa', minHeight: '100vh' }}>
+            <Header onSignIn={() => setShowLogin(true)} signedIn={signedIn} signOut={signOut} />
+            <HeroSection onGetStarted={() => setShowLogin(true)} />
+            <FeaturesSection />
+            <TestimonialSection />
+            <Footer />
 
-      {showLogin && (
-        <div style={modalOverlayStyle} onClick={() => setShowLogin(false)}>
-          <div style={modalContainerStyle} onClick={e => e.stopPropagation()}>
-            <button style={closeBtnStyle} onClick={() => setShowLogin(false)}>&times;</button>
-            <Login />
+            {showLogin && (
+              <div style={modalOverlayStyle} onClick={() => setShowLogin(false)}>
+                <div style={modalContainerStyle} onClick={e => e.stopPropagation()}>
+                  <button style={closeBtnStyle} onClick={() => setShowLogin(false)}>&times;</button>
+                  <Login onAuthSuccess={handleAuthSuccess} />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
+        }
+      />
+      <Route path="/onboarding" element={<Onboarding signedIn={signedIn} signOut={signOut} />} />
+    </Routes>
   );
 }
 
@@ -62,5 +95,6 @@ const closeBtnStyle = {
   color: '#888',
   cursor: 'pointer',
 };
+
 
 export default App;

@@ -26,7 +26,7 @@ export default function HeroSection() {
           Find Your Perfect Match, Not Just a Roommate
         </Typography>
         <TextField
-          id="outlined-basic"
+          id="outlined"
           label="Search Now"
           variant="outlined"
           sx={{

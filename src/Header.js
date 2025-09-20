@@ -1,10 +1,9 @@
 import React from "react";
 import AppBar from '@mui/material/AppBar';
-import App from "./App";
 import { Typography } from "@mui/material";
 import {Avatar,Box,Button,Toolbar} from "@mui/material";
 
-export default function Header({ onSignIn }) {
+export default function Header({ onSignIn, signedIn, signOut }) {
   return (
     <>
     <AppBar position="fixed" sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',backgroundColor: '#ffffffff',
@@ -12,7 +11,7 @@ export default function Header({ onSignIn }) {
       <Avatar
         src="/roomato-logo.png"
         alt="Roomato Logo"
-        sx={{ width: 90, height: 90, padding: 0 }}
+        sx={{ width: 100, height: 90, padding: 0 }}
         />
       <Box sx={{position:'flex',flexDirection:'column',alignItems:'center',gap:1,}}>
       <Typography
@@ -29,15 +28,11 @@ export default function Header({ onSignIn }) {
       </Typography>
       <Typography color="#1abc96ff">Find your space</Typography>
       </Box>
-      <Box sx={{ flexGrow: 1 }} /> 
-
-      <Button variant="contained" color="primary"  sx={{ backgroundColor: "#1abc96ff", ml: "auto", mr: "1rem" }} onClick={onSignIn}>Sign in</Button>
-
+      <Box sx={{ flexGrow: 1 }} />
+    {signedIn ? <Button variant="contained" color="primary"  sx={{ backgroundColor: "#1abc96ff", ml: "auto", mr: "1rem" }} onClick={signOut}>Sign out</Button> : <Button variant="contained" color="primary"  sx={{ backgroundColor: "#1abc96ff", ml: "auto", mr: "1rem" }} onClick={onSignIn}>Sign in</Button>}  
     </AppBar>
-          <Toolbar sx={{ height: '100px' }} />
-    
-</>
+    <Toolbar sx={{ height: '100px' }} />
 
-
+  </>
   );
 }
