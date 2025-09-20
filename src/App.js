@@ -8,7 +8,9 @@ import Footer from "./Footer";
 import Login from "./Login";
 import Onboarding from "./Onboarding";
 import Welcome from "./Welcome";
+import ProtectedOnboarding from "./ProtectedOnboarding";
 import useAuth from "./useAuth";
+import supabase from "./supabaseClient";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
@@ -29,9 +31,35 @@ function AppRoutes() {
     const { signedIn, signOut } = useAuth();
 
 
-  function handleAuthSuccess() {
+  async function handleAuthSuccess() {
     setShowLogin(false);
-    navigate("/onboarding");
+    
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        navigate("/onboarding");
+        return;
+      }
+
+      // Check if user already has a profile
+      const { data, error } = await supabase
+        .from('user_details')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (data && !error) {
+        // User has profile, go to welcome
+        navigate("/welcome");
+      } else {
+        // User needs to complete onboarding
+        navigate("/onboarding");
+      }
+    } catch (err) {
+      console.error('Error checking user profile:', err);
+      navigate("/onboarding");
+    }
   }
 
 
@@ -58,7 +86,14 @@ function AppRoutes() {
           </div>
         }
       />
-      <Route path="/onboarding" element={<Onboarding signedIn={signedIn} signOut={signOut} />} />
+      <Route 
+        path="/onboarding" 
+        element={
+          <ProtectedOnboarding signedIn={signedIn}>
+            <Onboarding signedIn={signedIn} signOut={signOut} />
+          </ProtectedOnboarding>
+        } 
+      />
       <Route path="/welcome" element={<Welcome signedIn={signedIn} signOut={signOut} />} />
     </Routes>
   );
