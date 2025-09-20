@@ -7,228 +7,170 @@ import {
   Button,
   Box,
   Typography,
-  Card,
-  CardContent,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Header from "./Header";
+import MapComponent from "./MapComponent";
+import supabase from "./supabaseClient";
+
 
 export default function Onboarding({ signedIn, signOut }) {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
+  const [location, setLocation] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log({ age, gender, status });
-  };
 
-  const theme = {
-    primary: "#1976d2",
-    primaryHover: "#1565c0",
-    background: "#FFFFFF",
-    lightGray: "#F5F5F5",
-    darkGray: "#666666",
-    text: "#333333",
+
+  const handleSubmit = async () => {
+    if (!age || !gender || !status || !location) {
+      alert("Please fill out all fields and select a location on the map.");
+      return;
+    }
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error("User not authenticated:", userError?.message);
+        alert("You must be logged in to complete your profile.");
+        return;
+      }
+
+      const { error } = await supabase.from("user_details").insert([{ 
+        age, 
+        gender, 
+        status,
+        latitude: location[0],
+        longitude: location[1]
+      }]);
+      
+      if (error) {
+        console.error("Error inserting user details:", error.message);
+        alert("Failed to save your details. Please try again.");
+      } else {
+        console.log("User details saved successfully:", { age, gender, status });
+        // Navigate to welcome page on success
+        navigate("/welcome");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      alert("An unexpected error occurred.");
+    }
   };
 
   return (
     <>
       <Header signedIn={signedIn} signOut={signOut} />
-      {/* Progress indicator */}
       <Box
         sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "4px",
-          backgroundColor: "#F5F5F5",
-          zIndex: 1000,
-        }}
-      >
-        <Box
-          sx={{
-            height: "100%",
-            width: "100%",
-            backgroundColor: theme.primary,
-            borderRadius: "0 2px 2px 0",
-          }}
-        />
-      </Box>
-      <Box
-        sx={{
-          minHeight: "100vh",
+          maxWidth: 1200,
+          mx: "auto",
+          p: 3,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: theme.lightGray,
-          padding: 3,
+          gap: 3,
         }}
       >
-        <Card
-          elevation={1}
+        <Typography variant="h3" gutterBottom sx={{ textAlign: "center" }}>
+          Complete Your Profile
+        </Typography>
+        
+        {/* Form Fields */}
+        <Box
           sx={{
-            backgroundColor: theme.background,
-            borderRadius: "8px",
-            maxWidth: 480,
-            width: "100%",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            p: 2,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
           }}
         >
-          <CardContent sx={{ padding: "32px" }}>
-            {/* Header */}
-            <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 600,
-                  color: theme.text,
-                  fontSize: "24px",
-                  mb: 1,
-                }}
-              >
-                Tell us about yourself
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: theme.darkGray,
-                  fontSize: "14px",
-                  fontWeight: 400,
-                }}
-              >
-                Help us personalize your experience
-              </Typography>
-            </Box>
-
-            {/* Form Fields */}
-            <Box
-              sx={{ display: "flex", flexDirection: "column", gap: 3, mb: 4 }}
+          <FormControl>
+            <InputLabel id="age-label">Age</InputLabel>
+            <Select
+              labelId="age-label"
+              value={age}
+              label="Age"
+              onChange={(e) => setAge(e.target.value)}
             >
-              <FormControl fullWidth>
-                <InputLabel
-                  sx={{
-                    color: theme.darkGray,
-                    "&.Mui-focused": { color: theme.primary },
-                  }}
-                >
-                  Age Range
-                </InputLabel>
-                <Select
-                  value={age}
-                  label="Age Range"
-                  onChange={(e) => setAge(e.target.value)}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#E0E0E0",
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                  }}
-                >
-                  <MenuItem value="18-22">18-22</MenuItem>
-                  <MenuItem value="23-27">23-27</MenuItem>
-                  <MenuItem value="28-32">28-32</MenuItem>
-                  <MenuItem value="33-37">33-37</MenuItem>
-                  <MenuItem value="38+">38+</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel
-                  sx={{
-                    color: theme.darkGray,
-                    "&.Mui-focused": { color: theme.primary },
-                  }}
-                >
-                  Gender Identity
-                </InputLabel>
-                <Select
-                  value={gender}
-                  label="Gender Identity"
-                  onChange={(e) => setGender(e.target.value)}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#E0E0E0",
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                  }}
-                >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                  <MenuItem value="non-binary">Non-binary</MenuItem>
-                  <MenuItem value="prefer-not-to-say">
-                    Prefer not to say
-                  </MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel
-                  sx={{
-                    color: theme.darkGray,
-                    "&.Mui-focused": { color: theme.primary },
-                  }}
-                >
-                  Current Status
-                </InputLabel>
-                <Select
-                  value={status}
-                  label="Current Status"
-                  onChange={(e) => setStatus(e.target.value)}
-                  sx={{
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#E0E0E0",
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: theme.primary,
-                    },
-                  }}
-                >
-                  <MenuItem value="student">Student</MenuItem>
-                  <MenuItem value="professional">Professional</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            {/* Submit Button */}
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={!age || !gender || !status}
-              fullWidth
-              sx={{
-                backgroundColor: theme.primary,
-                color: "#FFFFFF",
-                fontWeight: 500,
-                fontSize: "16px",
-                padding: "12px 24px",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: theme.primaryHover,
-                },
-                "&:disabled": {
-                  backgroundColor: "#E0E0E0",
-                  color: "#AAAAAA",
-                },
-              }}
+              {Array.from({ length: 50 }, (_, i) => i + 18).map((num) => (
+                <MenuItem key={num} value={num}>
+                  {num}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="gender-label">Gender</InputLabel>
+            <Select
+              labelId="gender-label"
+              value={gender}
+              label="Gender"
+              onChange={(e) => setGender(e.target.value)}
             >
-              Complete Profile
-            </Button>
-          </CardContent>
-        </Card>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="status-label">Status</InputLabel>
+            <Select
+              labelId="status-label"
+              value={status}
+              label="Status"
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <MenuItem value="single">Single</MenuItem>
+              <MenuItem value="in_a_relationship">In a Relationship</MenuItem>
+              <MenuItem value="married">Married</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Map Section */}
+        <Box
+          sx={{
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            p: 2,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Select Your Location
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Click on the map to select your preferred location
+          </Typography>
+          <MapComponent position={location} setPosition={setLocation} height={400} />
+          {location && (
+            <Typography variant="body2" sx={{ mt: 1, color: "#4ec688ff" }}>
+              Selected: {location[0].toFixed(4)}, {location[1].toFixed(4)}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Submit Button */}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#4ec688ff",
+            color: "#fff",
+            fontWeight: "bold",
+            py: 1.5,
+            px: 4,
+            boxShadow: 2,
+            alignSelf: "center",
+            '&:hover': {
+              backgroundColor: "#4cc474ff"
+            }
+          }}
+          onClick={handleSubmit}
+        >
+          Submit Profile
+        </Button>
       </Box>
     </>
   );
