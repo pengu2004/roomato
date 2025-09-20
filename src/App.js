@@ -7,6 +7,7 @@ import TestimonialSection from "./TestimonialSection";
 import Footer from "./Footer";
 import Login from "./Login";
 import Onboarding from "./Onboarding";
+import Welcome from "./Welcome";
 import useAuth from "./useAuth";
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -58,6 +59,7 @@ function AppRoutes() {
         }
       />
       <Route path="/onboarding" element={<Onboarding signedIn={signedIn} signOut={signOut} />} />
+      <Route path="/welcome" element={<Welcome signedIn={signedIn} signOut={signOut} />} />
     </Routes>
   );
 }
