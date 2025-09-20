@@ -28,39 +28,10 @@ function AppRoutes() {
   const [showLogin, setShowLogin] = useState(false);
   const navigate = useNavigate();
 
-    const { signedIn, signOut } = useAuth();
+    const { signedIn, signOut } = useAuth(() => setShowLogin(false));
 
 
-  async function handleAuthSuccess() {
-    setShowLogin(false);
-    
-    try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !user) {
-        navigate("/onboarding");
-        return;
-      }
 
-      // Check if user already has a profile
-      const { data, error } = await supabase
-        .from('user_details')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (data && !error) {
-        // User has profile, go to welcome
-        navigate("/welcome");
-      } else {
-        // User needs to complete onboarding
-        navigate("/onboarding");
-      }
-    } catch (err) {
-      console.error('Error checking user profile:', err);
-      navigate("/onboarding");
-    }
-  }
 
 
   return (
@@ -79,7 +50,7 @@ function AppRoutes() {
               <div style={modalOverlayStyle} onClick={() => setShowLogin(false)}>
                 <div style={modalContainerStyle} onClick={e => e.stopPropagation()}>
                   <button style={closeBtnStyle} onClick={() => setShowLogin(false)}>&times;</button>
-                  <Login onAuthSuccess={handleAuthSuccess} />
+                  <Login />
                 </div>
               </div>
             )}
