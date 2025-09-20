@@ -5,11 +5,11 @@ import {Box,Typography,TextField} from "@mui/material";
 export default function HeroSection() {
   return (
     <Box sx={{
+      background: "linear-gradient(90deg, #d4f2e5 0%, #aed8a8 100%)",
       display: "flex",
       flexDirection: "row",
       border: "1px solid #ccc",
       borderRadius: "8px",
-      background: "#fff",
       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
       overflow: "hidden"
     }}>
