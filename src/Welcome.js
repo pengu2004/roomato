@@ -111,122 +111,304 @@ const nearbyUsers = users.filter(u => {
       <Box
         sx={{
           minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: theme.lightGray,
-          padding: 3,
+          background: "linear-gradient(135deg, #f8fff9 0%, #e8f9ed 100%)",
+          py: 4,
+          px: { xs: 2, md: 4 }
         }}
       >
-        <Box sx={{ width: "100%", maxWidth: 800, mb: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            You have {nearbyUsers.length} users near you
-          </Typography>
-          <Box
+        {/* Welcome Header */}
+        <Box sx={{ 
+          textAlign: "center", 
+          mb: 6,
+          maxWidth: "600px",
+          mx: "auto"
+        }}>
+          <Typography
+            variant="h2"
             sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
-              gap: 2,
+              fontWeight: "700",
+              color: "#212529",
+              fontSize: { xs: "2rem", md: "2.5rem" },
+              mb: 2,
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
             }}
           >
-            {nearbyUsers?.map((user, index) => (
-              <Card key={user.id || index} sx={{ minWidth: 200 }}>
-                <CardContent>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    Age: {user.age}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Gender: {user.gender}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    Status: {user.status}
-                  </Typography>
-                  {/* Add more user info here if needed */}
-                </CardContent>
-              </Card>
-            ))}
-          </Box>
+            Welcome to Roomato! 🎉
+          </Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              color: "#6c757d",
+              fontWeight: "400",
+              fontSize: "1.1rem",
+              lineHeight: 1.6
+            }}
+          >
+            Your profile is ready. Start connecting with potential roommates near you!
+          </Typography>
         </Box>
-        <Card
-          elevation={1}
-          sx={{
-            backgroundColor: theme.background,
-            borderRadius: "8px",
-            maxWidth: 480,
-            width: "100%",
-          }}
-        >
-          <CardContent sx={{ padding: "32px", textAlign: "center" }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 600,
-                color: theme.text,
-                fontSize: "32px",
-                mb: 3,
-              }}
-            >
-              Hello! 👋
-            </Typography>
-            <Card>
-            </Card>
-            <Typography
-              variant="body1"
-              sx={{
-                color: theme.darkGray,
-                fontSize: "16px",
-                fontWeight: 400,
-                mb: 2,
-              }}
-            >
-              Welcome to Roomato! Your profile has been created successfully.
-            </Typography>
 
+        {/* Nearby Users Section */}
+        <Box sx={{ maxWidth: "1200px", mx: "auto", mb: 6 }}>
+          <Box sx={{ 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "space-between",
+            mb: 3
+          }}>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                fontWeight: "600",
+                color: "#212529",
+                fontSize: "1.5rem"
+              }}
+            >
+              Nearby Roommates
+            </Typography>
+            <Box sx={{
+              background: 'linear-gradient(135deg, #1abc96, #16a085)',
+              color: 'white',
+              borderRadius: '20px',
+              px: 3,
+              py: 1,
+              fontSize: '14px',
+              fontWeight: '600'
+            }}>
+              {nearbyUsers.length} matches found
+            </Box>
+          </Box>
+          
+          {nearbyUsers.length > 0 ? (
             <Box
               sx={{
-                backgroundColor: theme.lightGray,
-                padding: 2,
-                borderRadius: 1,
-                mb: 2,
+                display: "grid",
+                gridTemplateColumns: { 
+                  xs: "1fr", 
+                  sm: "repeat(2, 1fr)", 
+                  md: "repeat(3, 1fr)",
+                  lg: "repeat(4, 1fr)"
+                },
+                gap: 3,
               }}
             >
-              <Typography
-                variant="body2"
+              {nearbyUsers.map((roommate, index) => (
+                <Card 
+                  key={roommate.id || index} 
+                  sx={{
+                    borderRadius: "16px",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                    border: "1px solid #f0f0f0",
+                    transition: "all 0.3s ease",
+                    '&:hover': {
+                      transform: "translateY(-4px)",
+                      boxShadow: "0 8px 30px rgba(0, 0, 0, 0.12)"
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    {/* Avatar */}
+                    <Box
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        background: 'linear-gradient(135deg, #1abc96, #16a085)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '24px',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        mb: 2,
+                        mx: 'auto'
+                      }}
+                    >
+                      {roommate.gender === 'male' ? '👨' : roommate.gender === 'female' ? '👩' : '👤'}
+                    </Box>
+                    
+                    {/* Info */}
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: "600",
+                          color: "#212529",
+                          mb: 1,
+                          fontSize: "1.1rem"
+                        }}
+                      >
+                        Age {roommate.age}
+                      </Typography>
+                      
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <Box sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 1
+                        }}>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: "#6c757d",
+                              fontSize: "0.9rem",
+                              textTransform: "capitalize"
+                            }}
+                          >
+                            {roommate.gender}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{
+                          background: "#e8f9ed",
+                          borderRadius: "12px",
+                          px: 2,
+                          py: 1,
+                          display: "inline-block"
+                        }}>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: "#16a085",
+                              fontSize: "0.85rem",
+                              fontWeight: "500",
+                              textTransform: "capitalize"
+                            }}
+                          >
+                            {roommate.status.replace('_', ' ')}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          ) : (
+            <Card sx={{
+              borderRadius: "16px",
+              border: "2px dashed #dee2e6",
+              background: "transparent",
+              textAlign: "center",
+              py: 6
+            }}>
+              <CardContent>
+                <Typography sx={{ fontSize: "3rem", mb: 2 }}>🔍</Typography>
+                <Typography variant="h6" sx={{ color: "#6c757d", mb: 1 }}>
+                  No nearby roommates yet
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#6c757d" }}>
+                  We'll notify you when someone joins your area!
+                </Typography>
+              </CardContent>
+            </Card>
+          )}
+        </Box>
+
+        {/* Profile Summary Card */}
+        <Box sx={{ maxWidth: "600px", mx: "auto" }}>
+          <Card
+            sx={{
+              borderRadius: "20px",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
+              border: "1px solid #f0f0f0",
+              background: "white"
+            }}
+          >
+            <CardContent sx={{ p: 4, textAlign: "center" }}>
+              <Box
                 sx={{
-                  color: theme.darkGray,
-                  fontSize: "12px",
-                  fontWeight: 500,
-                  mb: 1,
+                  width: 80,
+                  height: 80,
+                  background: 'linear-gradient(135deg, #1abc96, #16a085)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  mb: 3,
+                  mx: 'auto'
                 }}
               >
-                Your User ID:
+                ✓
+              </Box>
+              
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "600",
+                  color: "#212529",
+                  fontSize: "1.8rem",
+                  mb: 2,
+                }}
+              >
+                Profile Complete!
               </Typography>
+              
               <Typography
                 variant="body1"
                 sx={{
-                  color: theme.text,
-                  fontSize: "14px",
-                  fontFamily: "monospace",
-                  wordBreak: "break-all",
+                  color: "#6c757d",
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                  mb: 3
                 }}
               >
-                {userId || "Loading..."}
+                Your Roomato profile is active and ready. We're actively matching you with compatible roommates in your area.
               </Typography>
-            </Box>
 
-            <Typography
-              variant="body2"
-              sx={{
-                color: theme.primary,
-                fontSize: "14px",
-                fontWeight: 500,
-              }}
-            >
-              You're all set to start finding your perfect roommate! 🏠
-            </Typography>
-          </CardContent>
-        </Card>
+              <Box
+                sx={{
+                  background: "#f8f9fa",
+                  borderRadius: "12px",
+                  p: 3,
+                  mb: 3
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#6c757d",
+                    fontSize: "0.85rem",
+                    fontWeight: "500",
+                    mb: 1,
+                  }}
+                >
+                  Your Profile ID
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#212529",
+                    fontSize: "0.9rem",
+                    fontFamily: "Monaco, Consolas, monospace",
+                    wordBreak: "break-all",
+                    background: "white",
+                    padding: 1,
+                    borderRadius: 1,
+                    border: "1px solid #e9ecef"
+                  }}
+                >
+                  {userId || "Loading..."}
+                </Typography>
+              </Box>
+
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#16a085",
+                  fontSize: "0.9rem",
+                  fontWeight: "500",
+                }}
+              >
+                🏠 Ready to find your perfect living situation!
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
       </Box>
     </>
   );
