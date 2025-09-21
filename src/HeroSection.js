@@ -1,8 +1,21 @@
 import React from "react";
-import {Box,Typography,TextField} from "@mui/material";
+import {Box,Typography,TextField,Alert} from "@mui/material";
 
 
 export default function HeroSection({ onLoginClick }) {
+  // Check if user was redirected from a protected route
+  const [showLoginPrompt, setShowLoginPrompt] = React.useState(false);
+  
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth') === 'required') {
+      setShowLoginPrompt(true);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Hide prompt after 5 seconds
+      setTimeout(() => setShowLoginPrompt(false), 5000);
+    }
+  }, []);
   return (
     <Box sx={{
       background: "linear-gradient(135deg, #f8fff9 0%, #e8f9ed 100%)",
@@ -41,6 +54,25 @@ export default function HeroSection({ onLoginClick }) {
         maxWidth: { xs: '100%', md: '600px' },
         pr: { md: 4 }
       }}>
+        {/* Authentication Required Alert */}
+        {showLoginPrompt && (
+          <Alert 
+            severity="info" 
+            sx={{ 
+              mb: 3,
+              borderRadius: '12px',
+              backgroundColor: '#e3f2fd',
+              border: '1px solid #1976d2',
+              '& .MuiAlert-message': {
+                fontSize: '14px',
+                fontWeight: '500'
+              }
+            }}
+            onClose={() => setShowLoginPrompt(false)}
+          >
+            Please sign in to access that page. Create an account or log in to continue.
+          </Alert>
+        )}
         {/* Main Headline */}
         <Typography 
           variant="h1" 

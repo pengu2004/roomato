@@ -9,6 +9,7 @@ import Footer from "./Footer";
 import Login from "./Login";
 import Onboarding from "./Onboarding";
 import Welcome from "./Welcome";
+import ProtectedRoute from "./ProtectedRoute";
 import useAuth from "./useAuth";
 import supabase from "./supabaseClient";
 
@@ -32,21 +33,25 @@ function AppContent() {
   useEffect(() => {
     const handleAuthChange = async () => {
       if (session && signedIn) {
-        try {
-          const { data, error } = await supabase
-            .from('user_details')
-            .select('*')
-            .eq('user_id', session.user.id)
-            .single();
+        // Only redirect if we're currently on the home page to avoid redirect loops
+        const currentPath = window.location.pathname;
+        if (currentPath === '/') {
+          try {
+            const { data, error } = await supabase
+              .from('user_details')
+              .select('*')
+              .eq('user_id', session.user.id)
+              .single();
 
-          if (data && !error) {
-            navigate("/welcome");
-          } else {
+            if (data && !error) {
+              navigate("/welcome");
+            } else {
+              navigate("/onboarding");
+            }
+          } catch (err) {
+            console.error('Error checking user profile:', err);
             navigate("/onboarding");
           }
-        } catch (err) {
-          console.error('Error checking user profile:', err);
-          navigate("/onboarding");
         }
       }
     };
@@ -54,7 +59,7 @@ function AppContent() {
     if (session) {
       handleAuthChange();
     }
-  }, [session,signedIn,navigate]);
+  }, [session, signedIn, navigate]);
 
   if (loading) {
     return (
@@ -86,20 +91,24 @@ function AppContent() {
           </>
         } />
         <Route path="/onboarding" element={
-          <Onboarding 
-            signedIn={signedIn} 
-            user={user}
-            onSignIn={openLoginModal}
-            signOut={handleSignOut}
-          />
+          <ProtectedRoute>
+            <Onboarding 
+              signedIn={signedIn} 
+              user={user}
+              onSignIn={openLoginModal}
+              signOut={handleSignOut}
+            />
+          </ProtectedRoute>
         } />
         <Route path="/welcome" element={
-          <Welcome 
-            signedIn={signedIn} 
-            user={user}
-            onSignIn={openLoginModal}
-            signOut={handleSignOut}
-          />
+          <ProtectedRoute>
+            <Welcome 
+              signedIn={signedIn} 
+              user={user}
+              onSignIn={openLoginModal}
+              signOut={handleSignOut}
+            />
+          </ProtectedRoute>
         } />
       </Routes>
 
