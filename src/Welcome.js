@@ -5,6 +5,9 @@ import supabase from "./supabaseClient";
 
 export default function Welcome({ signedIn, user, onSignIn, signOut }) {
   const [userId, setUserId] = useState("");
+  const[userLat,setUserLat]=useState(0)
+  const[userLong,setUserLong]=useState(0)
+  const [users,setUsers]=useState([])
 
   useEffect(() => {
     const getUserId = async () => {
@@ -12,6 +15,7 @@ export default function Welcome({ signedIn, user, onSignIn, signOut }) {
         const { data: { user }, error } = await supabase.auth.getUser();
         if (user) {
           setUserId(user.id);
+
         }
       } catch (err) {
         console.error("Error getting user:", err);
@@ -20,9 +24,76 @@ export default function Welcome({ signedIn, user, onSignIn, signOut }) {
 
     getUserId();
   }, []);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data, error } = await supabase
+        .from("user_details")
+        .select("*")
+
+      if (error) {
+        console.error(error)
+      } else {
+        setUsers(data)
+        console.log(data)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  function getDistance(lat1,long1,lat2,long2){
+    console.log("Calculating distance between:",lat1,long1,lat2,long2)
+  const R=6371
+  if (lat1==lat2 && long1==long2) 
+    console.log("same")
+  return 0
+  const dLon = (long2 - long1) * Math.PI / 180
+  const dLat=(lat2-lat1)* Math.PI/180
+  
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  return R * c
+
+}
+const radius = 10
+const nearbyUsers = users.filter(u => {
+  if (u.user_id === userId) return false
+
+  return getDistance(userLat, userLong, u.latitude, u.longitude) <= radius
+})
+  useEffect(() => {
+    const getUserLocation = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from('user_details')
+            .select('latitude, longitude')
+            .eq('user_id', user.id)
+            .single();
+
+          if (error) {
+            console.error("Error fetching user location:", error.message);
+          } else if (data) {
+            setUserLat(data.latitude);
+            setUserLong(data.longitude);
+          }
+        }
+      } catch (err) {
+        console.error("Error getting user location:", err);
+      }
+    };
+
+    getUserLocation();
+  }, [userId, userLat, userLong]);
+
+
 
   const theme = {
-    primary: "#1976d2",
+    primary: "#41983dff",
     background: "#FFFFFF",
     lightGray: "#F5F5F5",
     darkGray: "#666666",
@@ -48,6 +119,35 @@ export default function Welcome({ signedIn, user, onSignIn, signOut }) {
           padding: 3,
         }}
       >
+        <Box sx={{ width: "100%", maxWidth: 800, mb: 4 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            You have {nearbyUsers.length} users near you
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
+              gap: 2,
+            }}
+          >
+            {nearbyUsers?.map((user, index) => (
+              <Card key={user.id || index} sx={{ minWidth: 200 }}>
+                <CardContent>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    Age: {user.age}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    Gender: {user.gender}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    Status: {user.status}
+                  </Typography>
+                  {/* Add more user info here if needed */}
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </Box>
         <Card
           elevation={1}
           sx={{
@@ -69,7 +169,8 @@ export default function Welcome({ signedIn, user, onSignIn, signOut }) {
             >
               Hello! 👋
             </Typography>
-            
+            <Card>
+            </Card>
             <Typography
               variant="body1"
               sx={{
