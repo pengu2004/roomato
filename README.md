@@ -1,1 +1,1 @@
-roommate finder 
+roommate finder for infopark
