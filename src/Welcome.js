@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Card, CardContent } from "@mui/material";
 import Header from "./Header";
 import supabase from "./supabaseClient";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTelegram } from '@fortawesome/free-brands-svg-icons';
 
 export default function Welcome({ signedIn, user, onSignIn, signOut }) {
   const [userId, setUserId] = useState("");
@@ -144,7 +146,7 @@ const nearbyUsers = users.filter(u => {
               lineHeight: 1.6
             }}
           >
-            Your profile is ready. Start connecting with potential roommates near you!
+            Start connecting with potential roommates near you!
           </Typography>
         </Box>
 
@@ -296,7 +298,7 @@ const nearbyUsers = users.filter(u => {
                               justifyContent: "center",
                               gap: 1
                             }}>
-                              <Typography sx={{ fontSize: "0.8rem" }}>📱</Typography>
+                              <Typography sx={{ fontSize: "0.8rem" }}><FontAwesomeIcon icon={faTelegram} /></Typography>
                               <Typography 
                                 variant="body2" 
                                 sx={{ 

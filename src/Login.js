@@ -49,13 +49,15 @@ export default function Login({ isOpen, onClose }) {
         style={{
           background: "#ffffff",
           borderRadius: "16px",
-          padding: "40px",
+          padding: window.innerWidth <= 768 ? "24px 20px" : "40px",
           boxShadow: "0 20px 60px rgba(0, 0, 0, 0.1)",
           position: "relative",
-          minWidth: "360px",
-          maxWidth: "420px",
+          minWidth: window.innerWidth <= 768 ? "280px" : "360px",
+          maxWidth: window.innerWidth <= 768 ? "340px" : "420px",
           width: "100%",
-          border: "1px solid #f0f0f0"
+          border: "1px solid #f0f0f0",
+          maxHeight: window.innerWidth <= 768 ? "90vh" : "auto",
+          overflowY: window.innerWidth <= 768 ? "auto" : "visible"
         }}
         onClick={(e) => e.stopPropagation()} 
       >
@@ -95,26 +97,32 @@ export default function Login({ isOpen, onClose }) {
         {/* Header */}
         <div style={{ 
           textAlign: "center",
-          marginBottom: "32px" 
+          marginBottom: window.innerWidth <= 768 ? "24px" : "32px" 
         }}>
           <div style={{
-            width: "60px",
-            height: "60px",
+            width: window.innerWidth <= 768 ? "50px" : "60px",
+            height: window.innerWidth <= 768 ? "50px" : "60px",
             background: "linear-gradient(135deg, #1abc96, #16a085)",
             borderRadius: "50%",
-            margin: "0 auto 16px",
+            margin: window.innerWidth <= 768 ? "0 auto 12px" : "0 auto 16px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "24px",
+            fontSize: window.innerWidth <= 768 ? "20px" : "24px",
             color: "white",
             fontWeight: "bold"
           }}>
-          <Avatar sx={{ bgcolor: 'transparent', width: 24, height: 24 }}><img src="roomato-logo.png" alt="Logo" height="90" /></Avatar>
+          <Avatar sx={{ 
+            bgcolor: 'transparent', 
+            width: window.innerWidth <= 768 ? 20 : 24, 
+            height: window.innerWidth <= 768 ? 20 : 24 
+          }}>
+            <img src="roomato-logo.png" alt="Logo" height={window.innerWidth <= 768 ? "75" : "90"} />
+          </Avatar>
           </div>
           <h2 style={{ 
             margin: "0 0 8px 0", 
-            fontSize: "26px",
+            fontSize: window.innerWidth <= 768 ? "22px" : "26px",
             fontWeight: "600",
             color: "#212529",
             letterSpacing: "-0.5px"
@@ -124,7 +132,7 @@ export default function Login({ isOpen, onClose }) {
           <p style={{ 
             margin: 0, 
             color: "#6c757d", 
-            fontSize: "15px",
+            fontSize: window.innerWidth <= 768 ? "14px" : "15px",
             lineHeight: "1.4"
           }}>
             Find your perfect roommate match
@@ -132,7 +140,7 @@ export default function Login({ isOpen, onClose }) {
         </div>
         
         {/* Supabase Auth UI */}
-        <div style={{ marginTop: "24px" }}>
+        <div style={{ marginTop: window.innerWidth <= 768 ? "16px" : "24px" }}>
           <Auth
             supabaseClient={supabase}
             appearance={{ 
@@ -143,37 +151,38 @@ export default function Login({ isOpen, onClose }) {
                   color: 'white',
                   borderRadius: '8px',
                   fontWeight: '500',
-                  fontSize: '15px',
-                  padding: '12px 16px',
+                  fontSize: window.innerWidth <= 768 ? '14px' : '15px',
+                  padding: window.innerWidth <= 768 ? '10px 14px' : '12px 16px',
                   border: 'none',
                   transition: 'all 0.2s ease'
                 },
                 anchor: {
                   color: '#1abc96',
                   textDecoration: 'none',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  fontSize: window.innerWidth <= 768 ? '13px' : '14px'
                 },
                 divider: {
                   background: '#e9ecef',
-                  margin: '24px 0'
+                  margin: window.innerWidth <= 768 ? '16px 0' : '24px 0'
                 },
                 input: {
                   borderRadius: '8px',
                   border: '1px solid #dee2e6',
-                  padding: '12px 16px',
-                  fontSize: '15px',
+                  padding: window.innerWidth <= 768 ? '10px 14px' : '12px 16px',
+                  fontSize: window.innerWidth <= 768 ? '14px' : '15px',
                   transition: 'border-color 0.2s ease'
                 },
                 label: {
                   color: '#495057',
                   fontWeight: '500',
-                  fontSize: '14px',
+                  fontSize: window.innerWidth <= 768 ? '13px' : '14px',
                   marginBottom: '6px'
                 },
                 message: {
                   borderRadius: '8px',
-                  padding: '12px 16px',
-                  fontSize: '14px'
+                  padding: window.innerWidth <= 768 ? '10px 14px' : '12px 16px',
+                  fontSize: window.innerWidth <= 768 ? '13px' : '14px'
                 }
               },
               variables: {
@@ -197,14 +206,14 @@ export default function Login({ isOpen, onClose }) {
                     anchorBottomMargin: '4px',
                     emailInputSpacing: '4px',
                     socialAuthSpacing: '4px',
-                    buttonPadding: '12px 16px',
-                    inputPadding: '12px 16px'
+                    buttonPadding: window.innerWidth <= 768 ? '10px 14px' : '12px 16px',
+                    inputPadding: window.innerWidth <= 768 ? '10px 14px' : '12px 16px'
                   },
                   fontSizes: {
-                    baseBodySize: '15px',
-                    baseInputSize: '15px',
-                    baseLabelSize: '14px',
-                    baseButtonSize: '15px'
+                    baseBodySize: window.innerWidth <= 768 ? '14px' : '15px',
+                    baseInputSize: window.innerWidth <= 768 ? '14px' : '15px',
+                    baseLabelSize: window.innerWidth <= 768 ? '13px' : '14px',
+                    baseButtonSize: window.innerWidth <= 768 ? '14px' : '15px'
                   },
                   fonts: {
                     bodyFontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif`,
