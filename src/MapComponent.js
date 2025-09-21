@@ -34,7 +34,7 @@ export default function MapComponent({ position, setPosition, height = 300 }) {
       <MapContainer
         center={
             defaultPosition}
-        zoom={20}
+        zoom={15}
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%' }}
       >

@@ -3,7 +3,7 @@ import { Box, Typography, Card, CardContent } from "@mui/material";
 import Header from "./Header";
 import supabase from "./supabaseClient";
 
-export default function Welcome({ signedIn, signOut }) {
+export default function Welcome({ signedIn, user, onSignIn, signOut }) {
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -31,7 +31,12 @@ export default function Welcome({ signedIn, signOut }) {
 
   return (
     <>
-      <Header signedIn={signedIn} signOut={signOut} />
+      <Header 
+        signedIn={signedIn} 
+        user={user}
+        onSignIn={onSignIn}
+        signOut={signOut} 
+      />
       <Box
         sx={{
           minHeight: "100vh",

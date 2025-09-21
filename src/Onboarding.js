@@ -14,7 +14,7 @@ import MapComponent from "./MapComponent";
 import supabase from "./supabaseClient";
 
 
-export default function Onboarding({ signedIn, signOut }) {
+export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
@@ -61,7 +61,12 @@ export default function Onboarding({ signedIn, signOut }) {
 
   return (
     <>
-      <Header signedIn={signedIn} signOut={signOut} />
+      <Header 
+        signedIn={signedIn} 
+        user={user}
+        onSignIn={onSignIn}
+        signOut={signOut} 
+      />
       <Box
         sx={{
           maxWidth: 1200,

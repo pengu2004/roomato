@@ -1,57 +1,59 @@
 import supabase from "./supabaseClient";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
+export default function useAuth() {
+    const [user, setUser] = useState(null);
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-export default function useAuth(onAuthSuccess) {
-    const navigate = useNavigate();
-      const [signedIn, setSignedIn] = useState(false);
-        useEffect(() => {
-            supabase.auth.getSession().then(({ data: { session } }) => {
-                setSignedIn(!!session);
-            });
-            const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-                setSignedIn(!!session);
-                
-                // Handle authentication state changes globally
-                if (event === 'SIGNED_IN' && session) {
-                    // Close login modal if callback provided
-                    if (onAuthSuccess) {
-                        onAuthSuccess();
-                    }
-                    
-                    try {
-                        // Check if user already has a profile
-                        const { data, error } = await supabase
-                            .from('user_details')
-                            .select('*')
-                            .eq('user_id', session.user.id)
-                            .single();
-
-                        if (data && !error) {
-                            // User has profile, go to welcome
-                            navigate("/welcome");
-                        } else {
-                            // User needs to complete onboarding
-                            navigate("/onboarding");
-                        }
-                    } catch (err) {
-                        console.error('Error checking user profile:', err);
-                        navigate("/onboarding");
-                    }
-                }
-            });
-            return () => listener.subscription.unsubscribe();
-        }, [navigate, onAuthSuccess]);
-
-
-    const signOut = () => {
-            supabase.auth.signOut();
-            console.log("User signed out");
-            setSignedIn(false);
-            navigate("/");
-
-
+    useEffect(() => {
+        // Get initial session
+        const getSession = async () => {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) {
+                console.error('Error getting session:', error);
+            }
+            setSession(session);
+            setUser(session?.user ?? null);
+            setLoading(false);
         };
-        return { signedIn, signOut };
-    }
+
+        getSession();
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                console.log('Auth event:', event, session?.user?.email);
+                
+                setSession(session);
+                setUser(session?.user ?? null);
+                setLoading(false);
+            }
+        );
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
+
+    const signOut = async () => {
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                console.error('Error signing out:', error);
+            } else {
+                console.log("User signed out successfully");
+            }
+        } catch (error) {
+            console.error('Error during sign out:', error);
+        }
+    };
+
+    return { 
+        user, 
+        session, 
+        loading, 
+        signedIn: !!session, 
+        signOut 
+    };
+}

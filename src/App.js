@@ -1,5 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import HeroSection from "./HeroSection";
 import FeaturesSection from "./FeaturesSection";
@@ -8,103 +9,118 @@ import Footer from "./Footer";
 import Login from "./Login";
 import Onboarding from "./Onboarding";
 import Welcome from "./Welcome";
-import ProtectedOnboarding from "./ProtectedOnboarding";
 import useAuth from "./useAuth";
 import supabase from "./supabaseClient";
 
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-
-
-
-function App() {
-  return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
-  );
-}
-
-function AppRoutes() {
-  const [showLogin, setShowLogin] = useState(false);
+// Inner component that has access to useNavigate
+function AppContent() {
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { signedIn, loading, user, session, signOut } = useAuth();
   const navigate = useNavigate();
-  const handleAuthSuccess = () => {
-    setShowLogin(false);
+
+  // Function to open login modal
+  const openLoginModal = () => setLoginModalOpen(true);
+  const closeLoginModal = () => setLoginModalOpen(false);
+
+  // Handle logout with navigation
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/"); // Redirect to home page after logout
   };
-  const { signedIn, signOut } = useAuth(handleAuthSuccess);
 
+  // Handle navigation after successful login
+  useEffect(() => {
+    const handleAuthChange = async () => {
+      if (session && signedIn) {
+        try {
+          const { data, error } = await supabase
+            .from('user_details')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
 
+          if (data && !error) {
+            navigate("/welcome");
+          } else {
+            navigate("/onboarding");
+          }
+        } catch (err) {
+          console.error('Error checking user profile:', err);
+          navigate("/onboarding");
+        }
+      }
+    };
 
+    if (session) {
+      handleAuthChange();
+    }
+  }, [session,signedIn,navigate]);
 
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        Loading...
+      </div>
+    );
+  }
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <div style={{ background: '#f6f8fa', minHeight: '100vh' }}>
-            <Header onSignIn={() => setShowLogin(true)} signedIn={signedIn} signOut={signOut} />
-            <HeroSection onGetStarted={() => setShowLogin(true)} />
+    <div className="App">
+      <Header 
+        signedIn={signedIn} 
+        user={user} 
+        onSignIn={openLoginModal}
+        signOut={handleSignOut}
+      />
+      
+      <Routes>
+        <Route path="/" element={
+          <>
+            <HeroSection onLoginClick={openLoginModal} />
             <FeaturesSection />
             <TestimonialSection />
             <Footer />
+          </>
+        } />
+        <Route path="/onboarding" element={
+          <Onboarding 
+            signedIn={signedIn} 
+            user={user}
+            onSignIn={openLoginModal}
+            signOut={handleSignOut}
+          />
+        } />
+        <Route path="/welcome" element={
+          <Welcome 
+            signedIn={signedIn} 
+            user={user}
+            onSignIn={openLoginModal}
+            signOut={handleSignOut}
+          />
+        } />
+      </Routes>
 
-            {showLogin && (
-              <div style={modalOverlayStyle} onClick={() => setShowLogin(false)}>
-                <div style={modalContainerStyle} onClick={e => e.stopPropagation()}>
-                  <button style={closeBtnStyle} onClick={() => setShowLogin(false)}>&times;</button>
-                  <Login />
-                </div>
-              </div>
-            )}
-          </div>
-        }
+      {/* Login Modal */}
+      <Login 
+        isOpen={loginModalOpen} 
+        onClose={closeLoginModal} 
       />
-      <Route 
-        path="/onboarding" 
-        element={
-          <ProtectedOnboarding signedIn={signedIn}>
-            <Onboarding signedIn={signedIn} signOut={signOut} />
-          </ProtectedOnboarding>
-        } 
-      />
-      <Route path="/welcome" element={<Welcome signedIn={signedIn} signOut={signOut} />} />
-    </Routes>
+    </div>
   );
 }
 
-const modalOverlayStyle = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  background: 'rgba(0,0,0,0.18)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 1000,
-};
-
-const modalContainerStyle = {
-  background: '#000000ff',
-  borderRadius: 20,
-  boxShadow: '0 4px 32px rgba(0,0,0,0.18)',
-  padding: 32,
-  maxWidth: 360,
-  width: '90%',
-  position: 'relative',
-};
-
-const closeBtnStyle = {
-  position: 'absolute',
-  top: 12,
-  right: 16,
-  background: 'none',
-  border: 'none',
-  fontSize: 28,
-  color: '#888',
-  cursor: 'pointer',
-};
-
+// Main App component with Router
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
 
 export default App;
