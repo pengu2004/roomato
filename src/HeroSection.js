@@ -90,6 +90,8 @@ export default function HeroSection({ onLoginClick }) {
           maxWidth: "500px"
         }}>
           <TextField
+                      onClick={onLoginClick}
+
             placeholder="Enter your location..."
             variant="outlined"
             sx={{
@@ -146,11 +148,16 @@ export default function HeroSection({ onLoginClick }) {
         {/* Stats or Social Proof */}
         <Box sx={{ 
           display: 'flex',
-          gap: 4,
+          gap: { xs: 3, md: 4 },
           mt: 6,
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          justifyContent: { xs: 'center', md: 'flex-start' },
+          width: '100%'
         }}>
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ 
+            textAlign: 'center',
+            minWidth: { xs: '80px', md: 'auto' }
+          }}>
             <Typography sx={{ fontSize: '24px', fontWeight: '700', color: '#1abc96' }}>
               1000+
             </Typography>
@@ -158,7 +165,10 @@ export default function HeroSection({ onLoginClick }) {
               Happy Roommates
             </Typography>
           </Box>
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ 
+            textAlign: 'center',
+            minWidth: { xs: '80px', md: 'auto' }
+          }}>
             <Typography sx={{ fontSize: '24px', fontWeight: '700', color: '#1abc96' }}>
               50+
             </Typography>
@@ -166,7 +176,10 @@ export default function HeroSection({ onLoginClick }) {
               Cities
             </Typography>
           </Box>
-          <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Box sx={{ 
+            textAlign: 'center',
+            minWidth: { xs: '80px', md: 'auto' }
+          }}>
             <Typography sx={{ fontSize: '24px', fontWeight: '700', color: '#1abc96' }}>
               4.9★
             </Typography>
@@ -179,26 +192,36 @@ export default function HeroSection({ onLoginClick }) {
       
       {/* Image Section */}
       <Box sx={{
-        flex: { xs: 'none', md: 1 },
-        display: "flex",
+        flex: { xs: 'none', md: 1, lg: 3 },
+
+        display: {xs: 'none', md: 'flex'},
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: { xs: "flex-end", md: "flex-end",lg: "flex-end" },
         mt: { xs: 4, md: 0 },
+        mr: { xs: 2, md: -4, lg: 22 },
         zIndex: 1,
-        maxWidth: { xs: '100%', md: '500px' }
+        maxWidth: { xs: '100%', md: '500px' },
+        width: { xs: '100%', md: 'auto' },
+        position: { xs: 'relative', md: 'relative' }
       }}>
-        <img
-          src="/Hero-owls.png"
-          alt="Happy roommates"
-          style={{
-            width: "100%",
-            maxWidth: "400px",
-            height: "auto",
-            objectFit: "contain",
-            display: "block",
-            filter: "drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1))"
-          }}
-        />
+        <Box sx={{
+          position: 'relative',
+          width: { xs: '280px', sm: '320px', md: '380px' },
+          height: { xs: '280px', sm: '320px', md: '380px' },
+          display: 'flex',
+          alignItems: 'right',
+          justifyContent: 'right'
+        }}>
+          <img
+            src="/Hero-owls.png"
+            alt="Happy roommates"
+            style={{
+              width: "100",
+              height: "100",
+              filter: "drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1))"
+            }}
+          />
+        </Box>
       </Box>
     </Box>
   );

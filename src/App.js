@@ -82,8 +82,6 @@ function AppContent() {
         <Route path="/" element={
           <>
             <HeroSection onLoginClick={openLoginModal} />
-            <FeaturesSection />
-            <TestimonialSection />
             <Footer />
           </>
         } />

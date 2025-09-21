@@ -133,7 +133,7 @@ const nearbyUsers = users.filter(u => {
               fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
             }}
           >
-            Welcome to Roomato! 🎉
+            Welcome to Roomato! 
           </Typography>
           <Typography
             variant="h6"
@@ -279,6 +279,38 @@ const nearbyUsers = users.filter(u => {
                             {roommate.status.replace('_', ' ')}
                           </Typography>
                         </Box>
+                        
+                        {/* Telegram Contact */}
+                        {roommate.telegram && (
+                          <Box sx={{
+                            background: "#e3f2fd",
+                            borderRadius: "12px",
+                            px: 2,
+                            py: 1,
+                            display: "inline-block",
+                            mt: 1
+                          }}>
+                            <Box sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: 1
+                            }}>
+                              <Typography sx={{ fontSize: "0.8rem" }}>📱</Typography>
+                              <Typography 
+                                variant="body2" 
+                                sx={{ 
+                                  color: "#1976d2",
+                                  fontSize: "0.8rem",
+                                  fontWeight: "500",
+                                  fontFamily: "monospace"
+                                }}
+                              >
+                                {roommate.telegram}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        )}
                       </Box>
                     </Box>
                   </CardContent>
@@ -306,109 +338,6 @@ const nearbyUsers = users.filter(u => {
           )}
         </Box>
 
-        {/* Profile Summary Card */}
-        <Box sx={{ maxWidth: "600px", mx: "auto" }}>
-          <Card
-            sx={{
-              borderRadius: "20px",
-              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
-              border: "1px solid #f0f0f0",
-              background: "white"
-            }}
-          >
-            <CardContent sx={{ p: 4, textAlign: "center" }}>
-              <Box
-                sx={{
-                  width: 80,
-                  height: 80,
-                  background: 'linear-gradient(135deg, #1abc96, #16a085)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '32px',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  mb: 3,
-                  mx: 'auto'
-                }}
-              >
-                ✓
-              </Box>
-              
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: "600",
-                  color: "#212529",
-                  fontSize: "1.8rem",
-                  mb: 2,
-                }}
-              >
-                Profile Complete!
-              </Typography>
-              
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#6c757d",
-                  fontSize: "1rem",
-                  lineHeight: 1.6,
-                  mb: 3
-                }}
-              >
-                Your Roomato profile is active and ready. We're actively matching you with compatible roommates in your area.
-              </Typography>
-
-              <Box
-                sx={{
-                  background: "#f8f9fa",
-                  borderRadius: "12px",
-                  p: 3,
-                  mb: 3
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#6c757d",
-                    fontSize: "0.85rem",
-                    fontWeight: "500",
-                    mb: 1,
-                  }}
-                >
-                  Your Profile ID
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "#212529",
-                    fontSize: "0.9rem",
-                    fontFamily: "Monaco, Consolas, monospace",
-                    wordBreak: "break-all",
-                    background: "white",
-                    padding: 1,
-                    borderRadius: 1,
-                    border: "1px solid #e9ecef"
-                  }}
-                >
-                  {userId || "Loading..."}
-                </Typography>
-              </Box>
-
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#16a085",
-                  fontSize: "0.9rem",
-                  fontWeight: "500",
-                }}
-              >
-                🏠 Ready to find your perfect living situation!
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
       </Box>
     </>
   );

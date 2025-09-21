@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   Typography,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
@@ -18,13 +19,14 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
+  const [telegram, setTelegram] = useState("");
   const [location, setLocation] = useState(null);
   const navigate = useNavigate();
 
 
 
   const handleSubmit = async () => {
-    if (!age || !gender || !status || !location) {
+    if (!age || !gender || !status || !telegram || !location) {
       alert("Please fill out all fields and select a location on the map.");
       return;
     }
@@ -41,6 +43,7 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
         age, 
         gender, 
         status,
+        telegram,
         latitude: location[0],
         longitude: location[1]
       }]);
@@ -138,8 +141,9 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
             <Box
               sx={{
                 display: "grid",
-                gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+                gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
                 gap: 3,
+                mb: 3
               }}
             >
               <FormControl fullWidth>
@@ -213,7 +217,15 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
               </FormControl>
-              
+            </Box>
+            
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+                gap: 3,
+              }}
+            >
               <FormControl fullWidth>
                 <InputLabel 
                   id="status-label"
@@ -248,6 +260,34 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
                   <MenuItem value="married">Married</MenuItem>
                 </Select>
               </FormControl>
+              
+              <TextField
+                fullWidth
+                label="Telegram Username"
+                value={telegram}
+                onChange={(e) => setTelegram(e.target.value)}
+                placeholder="@username"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: "12px",
+                    '& fieldset': {
+                      borderColor: '#e9ecef'
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#1abc96'
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#1abc96',
+                      borderWidth: '2px'
+                    }
+                  },
+                  '& .MuiInputLabel-root': {
+                    fontWeight: "500",
+                    color: "#495057"
+                  }
+                }}
+                helperText="Enter your Telegram username (e.g., @john_doe)"
+              />
             </Box>
           </Box>
 
@@ -328,7 +368,7 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={!age || !gender || !status || !location}
+              disabled={!age || !gender || !status || !telegram || !location}
               sx={{
                 background: 'linear-gradient(135deg, #1abc96, #16a085)',
                 color: "white",

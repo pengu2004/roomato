@@ -3,6 +3,7 @@ import supabase from "./supabaseClient";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import useAuth from './useAuth';
+import { Avatar } from '@mui/material';
 
 export default function Login({ isOpen, onClose }) {
   const { signedIn, loading } = useAuth();
@@ -109,7 +110,7 @@ export default function Login({ isOpen, onClose }) {
             color: "white",
             fontWeight: "bold"
           }}>
-            R
+          <Avatar sx={{ bgcolor: 'transparent', width: 24, height: 24 }}><img src="roomato-logo.png" alt="Logo" height="90" /></Avatar>
           </div>
           <h2 style={{ 
             margin: "0 0 8px 0", 

@@ -44,7 +44,7 @@ export default function Header({
             boxShadow: '0 4px 12px rgba(26, 188, 150, 0.3)'
           }}
         >
-          R
+          <Avatar sx={{ bgcolor: 'transparent', width: 24, height: 24 }}><img src="roomato-logo.png" alt="Logo" height="90" /></Avatar>
         </Box>
         <Box>
           <Typography
