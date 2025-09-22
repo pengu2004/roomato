@@ -26,7 +26,7 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
 
 
   const handleSubmit = async () => {
-    if (!age || !gender || !status || !telegram || !location) {
+    if (!age || !gender || !telegram || !location) {
       alert("Please fill out all fields and select a location on the map.");
       return;
     }
