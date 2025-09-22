@@ -233,7 +233,6 @@ export default function Login({ isOpen, onClose }) {
                 }
               }
             }}
-            providers={['google']}
             redirectTo={window.location.origin}
             showLinks={true}
             magicLink={false}
