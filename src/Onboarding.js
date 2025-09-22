@@ -42,7 +42,6 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
       const { error } = await supabase.from("user_details").insert([{ 
         age, 
         gender, 
-        status,
         telegram,
         latitude: location[0],
         longitude: location[1]
@@ -53,7 +52,6 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
         alert("Failed to save your details. Please try again.");
       } else {
         console.log("User details saved successfully:", { age, gender, status });
-        // Navigate to welcome page on success
         navigate("/welcome");
       }
     } catch (err) {
@@ -226,41 +224,6 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
                 gap: 3,
               }}
             >
-              <FormControl fullWidth>
-                <InputLabel 
-                  id="status-label"
-                  sx={{
-                    fontWeight: "500",
-                    color: "#495057"
-                  }}
-                >
-                  Relationship Status
-                </InputLabel>
-                <Select
-                  labelId="status-label"
-                  value={status}
-                  label="Relationship Status"
-                  onChange={(e) => setStatus(e.target.value)}
-                  sx={{
-                    borderRadius: "12px",
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#e9ecef'
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#1abc96'
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#1abc96',
-                      borderWidth: '2px'
-                    }
-                  }}
-                >
-                  <MenuItem value="single">Single</MenuItem>
-                  <MenuItem value="in_a_relationship">In a Relationship</MenuItem>
-                  <MenuItem value="married">Married</MenuItem>
-                </Select>
-              </FormControl>
-              
               <TextField
                 fullWidth
                 label="Telegram Username"
@@ -368,7 +331,7 @@ export default function Onboarding({ signedIn, user, onSignIn, signOut }) {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              disabled={!age || !gender || !status || !telegram || !location}
+              disabled={!age || !gender || !telegram || !location}
               sx={{
                 background: 'linear-gradient(135deg, #1abc96, #16a085)',
                 color: "white",

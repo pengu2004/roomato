@@ -55,24 +55,8 @@ export default function HeroSection({ onLoginClick }) {
         pr: { md: 4 }
       }}>
         {/* Authentication Required Alert */}
-        {showLoginPrompt && (
-          <Alert 
-            severity="info" 
-            sx={{ 
-              mb: 3,
-              borderRadius: '12px',
-              backgroundColor: '#e3f2fd',
-              border: '1px solid #1976d2',
-              '& .MuiAlert-message': {
-                fontSize: '14px',
-                fontWeight: '500'
-              }
-            }}
-            onClose={() => setShowLoginPrompt(false)}
-          >
-            Please sign in to access that page. Create an account or log in to continue.
-          </Alert>
-        )}
+        
+        
         {/* Main Headline */}
         <Typography 
           variant="h1" 
