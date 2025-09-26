@@ -278,7 +278,7 @@ const nearbyUsers = users.filter(u => {
                               textTransform: "capitalize"
                             }}
                           >
-                            {roommate.status.replace('_', ' ')}
+                            {roommate.status?.replace('_', ' ')}
                           </Typography>
                         </Box>
                         
